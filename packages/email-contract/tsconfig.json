@@ -1,0 +1,16 @@
+{
+  "extends": "@dinwwwh/tsconfig/base-lib.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": ["vite/client"]
+  },
+  "references": [{ "path": "../zod" }, { "path": "../aws-contract" }],
+  "include": ["src"],
+  "exclude": [
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "**/__snapshots__/**"
+  ]
+}
