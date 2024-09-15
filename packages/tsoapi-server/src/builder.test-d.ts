@@ -102,14 +102,23 @@ it('strict handler response headers', () => {
   })
 })
 
+it('only allow combined valid handlers', () => {
+  builder.implement(userRouter).router({
+    // FIX: expect typescript error here
+    find: builder.implement(userRouter.find),
+    create: '' as any,
+    update: '' as any,
+    delete: '' as any,
+  })
+})
+
 it('only allow combined handlers that match the context', () => {
   builder.implement(userRouter).router({
-    // @ts-expect-error must be a handler
-    find: builder.implement(userRouter.find),
+    // Below can because it does not depend on any context so it can safely run side this router
+    create: builderWithoutContext.implement(userRouter.create).handler((_) => '' as any),
     // @ts-expect-error must match the context
-    create: builderWithoutContext.implement(userRouter.create).handler(() => '' as any),
-    // @ts-expect-error must match the context
-    update: builderWithMismatchedContext.implement(userRouter.update).handler(() => '' as any),
-    delete: builder.implement(userRouter.delete).handler(() => '' as any),
+    update: builderWithMismatchedContext.implement(userRouter.update).handler((_) => '' as any),
+    delete: '' as any,
+    find: '' as any,
   })
 })
