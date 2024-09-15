@@ -104,7 +104,7 @@ it('strict handler response headers', () => {
 
 it('only allow combined valid handlers', () => {
   builder.implement(userRouter).router({
-    // FIX: expect typescript error here
+    // @ts-expect-error must be a valid handler
     find: builder.implement(userRouter.find),
     create: '' as any,
     update: '' as any,

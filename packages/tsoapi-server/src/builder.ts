@@ -1,4 +1,4 @@
-import { Contract, ContractsRouter, isLeafContract } from '@tsoapi/contract'
+import { Contract, ContractsRouter, isContract } from '@tsoapi/contract'
 import { Context, ContractHandler, ContractHandlersRouter } from './types'
 
 export class ServerBuilder<TContext extends Context = Context> {
@@ -6,17 +6,16 @@ export class ServerBuilder<TContext extends Context = Context> {
     return this as unknown as ServerBuilder<TContext>
   }
 
-  implement<
-    Ctr extends Contract | ContractsRouter,
-    Rtn = Ctr extends Contract
-      ? ContractHandlerBuilder<TContext, Ctr>
-      : ContractHandlersRouterBuilder<TContext, Ctr>
-  >(contract: Ctr): Rtn {
-    if (isLeafContract(contract)) {
-      return new ContractHandlerBuilder(contract) as Rtn
+  implement<Ctr extends Contract | ContractsRouter>(
+    contract: Ctr
+  ): Ctr extends Contract
+    ? ContractHandlerBuilder<TContext, Ctr>
+    : ContractHandlersRouterBuilder<TContext, Ctr> {
+    if (isContract(contract)) {
+      return new ContractHandlerBuilder(contract) as any
     }
 
-    return new ContractHandlersRouterBuilder(contract) as Rtn
+    return new ContractHandlersRouterBuilder(contract) as any
   }
 }
 
