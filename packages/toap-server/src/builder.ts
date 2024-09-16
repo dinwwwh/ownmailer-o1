@@ -1,41 +1,43 @@
-import { Contract, ContractsRouter, isContract } from '@toap/contract'
-import { Context, ContractHandler, ContractHandlersRouter } from './types'
+import { Contract, ContractCollection, isContract } from '@toap/contract'
+import { AllowedContext, ContractResolver, ContractResolverCollection } from './types'
 
-export class ServerBuilder<TContext extends Context = Context> {
-  context<TContext extends Context = Context>(): ServerBuilder<TContext> {
+export class ServerBuilder<TContext extends AllowedContext = AllowedContext> {
+  context<TContext extends AllowedContext = AllowedContext>(): ServerBuilder<TContext> {
     return this as unknown as ServerBuilder<TContext>
   }
 
-  implement<Ctr extends Contract | ContractsRouter>(
+  fulfill<Ctr extends Contract | ContractCollection>(
     contract: Ctr
   ): Ctr extends Contract
-    ? ContractHandlerBuilder<TContext, Ctr>
-    : ContractHandlersRouterBuilder<TContext, Ctr> {
+    ? ContractResolverBuilder<TContext, Ctr>
+    : ContractResolverCollectionBuilder<TContext, Ctr> {
     if (isContract(contract)) {
-      return new ContractHandlerBuilder(contract) as any
+      return new ContractResolverBuilder(contract) as any
     }
 
-    return new ContractHandlersRouterBuilder(contract) as any
+    return new ContractResolverCollectionBuilder(contract) as any
   }
 }
 
-export class ContractHandlerBuilder<
-  TContext extends Context = Context,
+export class ContractResolverBuilder<
+  TContext extends AllowedContext = AllowedContext,
   TContract extends Contract = Contract
 > {
   constructor(private readonly contract: TContract) {}
-  handler<THandler extends ContractHandler<TContext, TContract>>(handler: THandler): THandler {
-    return handler
+  resolver<TResolver extends ContractResolver<TContext, TContract>>(
+    resolver: TResolver
+  ): TResolver {
+    return resolver
   }
 }
 
-export class ContractHandlersRouterBuilder<
-  TContext extends Context = Context,
-  TContracts extends ContractsRouter = ContractsRouter,
-  TContractHandlersRouter = ContractHandlersRouter<TContext, TContracts>
+export class ContractResolverCollectionBuilder<
+  TContext extends AllowedContext = AllowedContext,
+  TContracts extends ContractCollection = ContractCollection,
+  TContractResolverCollection = ContractResolverCollection<TContext, TContracts>
 > {
   constructor(private readonly contracts: TContracts) {}
-  router(contractHandlers: TContractHandlersRouter): TContractHandlersRouter {
-    return contractHandlers
+  collect(collection: TContractResolverCollection): TContractResolverCollection {
+    return collection
   }
 }

@@ -1,4 +1,4 @@
-import { contract, router } from '@toap/contract'
+import { collect, contract } from '@toap/contract'
 import { object, string } from 'valibot'
 import { NewPetSchema, NewUserSchema, PetSchema, UserSchema } from './schemas'
 
@@ -56,7 +56,7 @@ const deletePetContract = contract({
   },
 })
 
-export const petRouter = router({
+export const petContractCollection = collect({
   find: findPetContract,
   create: createPetContract,
   update: updatePetContract,
@@ -117,7 +117,7 @@ export const deleteUserContract = contract({
   },
 })
 
-export const userRouter = router({
+export const userContractCollection = collect({
   find: findUserContract,
   create: createUserContract,
   update: updateUserContract,
@@ -137,8 +137,8 @@ const pingContract = contract({
   },
 })
 
-export const appRouter = router({
+export const appContractCollection = collect({
   ping: pingContract,
-  pet: petRouter,
-  user: userRouter,
+  pet: petContractCollection,
+  user: userContractCollection,
 })

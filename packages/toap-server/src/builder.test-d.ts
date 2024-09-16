@@ -1,7 +1,7 @@
 import { contract } from '@toap/contract'
 import { InferOutput, object, string } from 'valibot'
 import { expectTypeOf, it } from 'vitest'
-import { appRouter, userRouter } from './__tests__/contract'
+import { appContractCollection, userContractCollection } from './__tests__/contract'
 import { fakeUser } from './__tests__/fakes'
 import { ServerBuilder } from './builder'
 
@@ -9,7 +9,7 @@ const builderWithoutContext = new ServerBuilder()
 const builderWithMismatchedContext = new ServerBuilder<{ hi: 'hello' }>()
 
 it('strict context on undefined context', () => {
-  builderWithoutContext.implement(appRouter.ping).handler(({ context: ctx }) => {
+  builderWithoutContext.fulfill(appContractCollection.ping).resolver(({ context: ctx }) => {
     expectTypeOf(ctx).toMatchTypeOf<unknown>()
 
     return '' as any
@@ -43,7 +43,7 @@ it('can infer input', () => {
   })
 
   builder
-    .implement(
+    .fulfill(
       contract({
         method: 'GET' as const,
         path: '/pets/{id}' as const,
@@ -53,7 +53,7 @@ it('can infer input', () => {
         headers: HeadersSchema,
       })
     )
-    .handler(({ context, params, headers, query, body }) => {
+    .resolver(({ context, params, headers, query, body }) => {
       expectTypeOf(context).toMatchTypeOf<Context>()
       expectTypeOf(params).toMatchTypeOf<InferOutput<typeof ParamsSchema>>()
       expectTypeOf(headers).toMatchTypeOf<InferOutput<typeof HeadersSchema>>()
@@ -62,15 +62,15 @@ it('can infer input', () => {
     })
 })
 
-it('strict handler response body', () => {
+it('strict resolver response body', () => {
   // @ts-expect-error the return must contain body
-  builder.implement(userRouter.find).handler(() => {
+  builder.fulfill(userContractCollection.find).resolver(() => {
     return {
       status: 200,
     }
   })
 
-  builder.implement(userRouter.find).handler(({ context: ctx }) => {
+  builder.fulfill(userContractCollection.find).resolver(({ context: ctx }) => {
     expectTypeOf(ctx).toMatchTypeOf<Context>()
 
     return {
@@ -80,9 +80,9 @@ it('strict handler response body', () => {
   })
 })
 
-it('strict handler response headers', () => {
+it('strict resolver response headers', () => {
   // @ts-expect-error the return must contain headers
-  builder.implement(appRouter.ping).handler(({ context: ctx }) => {
+  builder.fulfill(appContractCollection.ping).resolver(({ context: ctx }) => {
     expectTypeOf(ctx).toMatchTypeOf<Context>()
 
     return {
@@ -90,7 +90,7 @@ it('strict handler response headers', () => {
     }
   })
 
-  builder.implement(appRouter.ping).handler(({ context: ctx }) => {
+  builder.fulfill(appContractCollection.ping).resolver(({ context: ctx }) => {
     expectTypeOf(ctx).toMatchTypeOf<Context>()
 
     return {
@@ -102,22 +102,24 @@ it('strict handler response headers', () => {
   })
 })
 
-it('only allow combined valid handlers', () => {
-  builder.implement(userRouter).router({
-    // @ts-expect-error must be a valid handler
-    find: builder.implement(userRouter.find),
+it('only allow combined valid resolvers', () => {
+  builder.fulfill(userContractCollection).collect({
+    // @ts-expect-error must be a valid resolver
+    find: builder.fulfill(userContractCollection.find),
     create: '' as any,
     update: '' as any,
     delete: '' as any,
   })
 })
 
-it('only allow combined handlers that match the context', () => {
-  builder.implement(userRouter).router({
-    // Below can because it does not depend on any context so it can safely run side this router
-    create: builderWithoutContext.implement(userRouter.create).handler((_) => '' as any),
+it('only allow combined resolvers that match the context', () => {
+  builder.fulfill(userContractCollection).collect({
+    // Below can because it does not depend on any context so it can safely run side this collection
+    create: builderWithoutContext.fulfill(userContractCollection.create).resolver((_) => '' as any),
     // @ts-expect-error must match the context
-    update: builderWithMismatchedContext.implement(userRouter.update).handler((_) => '' as any),
+    update: builderWithMismatchedContext
+      .fulfill(userContractCollection.update)
+      .resolver((_) => '' as any),
     delete: '' as any,
     find: '' as any,
   })

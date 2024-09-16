@@ -1,26 +1,26 @@
 import type {
   AllowedSchema,
   Contract,
+  ContractCollection,
   ContractResponse,
   ContractResponses,
-  ContractsRouter,
 } from '@toap/contract'
 import { InferInput } from 'valibot'
 import { IsEqual, Promisable } from './utils/types'
 
-export type Context = {
+export type AllowedContext = {
   [key: string | number | symbol]: unknown
 }
 
-export interface ContractHandler<
-  TContext extends Context = Context,
+export interface ContractResolver<
+  TContext extends AllowedContext = AllowedContext,
   TContract extends Contract = Contract
 > {
-  (input: ContractHandlerInput<TContext, TContract>): Promisable<ContractHandlerOutput<TContract>>
+  (input: ContractResolverInput<TContext, TContract>): Promisable<ContractResolverOutput<TContract>>
 }
 
-export type ContractHandlerInput<
-  TContext extends Context = Context,
+export type ContractResolverInput<
+  TContext extends AllowedContext = AllowedContext,
   TContract extends Contract = Contract
 > = TContract extends Contract<
   infer _Responses,
@@ -40,7 +40,7 @@ export type ContractHandlerInput<
     }
   : never
 
-export type ContractHandlerOutput<
+export type ContractResolverOutput<
   TContract extends Contract = Contract,
   TResponses = TContract extends Contract<infer Responses> ? Responses : never,
   TBodySchema = TResponses[keyof TResponses] extends ContractResponse<infer BodySchema>
@@ -64,11 +64,11 @@ export type ContractHandlerOutput<
           : { headers: InferInput<THeadersSchema> }
         : { headers?: never })
 
-export type ContractHandlersRouter<
-  TContext extends Context = Context,
-  TContractsRouter extends ContractsRouter = ContractsRouter
+export type ContractResolverCollection<
+  TContext extends AllowedContext = AllowedContext,
+  TContractCollection extends ContractCollection = ContractCollection
 > = {
-  [K in keyof TContractsRouter]: TContractsRouter[K] extends Contract
-    ? ContractHandler<TContext, TContractsRouter[K]>
-    : ContractHandlersRouter<TContext, TContractsRouter[K]>
+  [K in keyof TContractCollection]: TContractCollection[K] extends Contract
+    ? ContractResolver<TContext, TContractCollection[K]>
+    : ContractResolverCollection<TContext, TContractCollection[K]>
 }

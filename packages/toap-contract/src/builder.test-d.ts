@@ -1,6 +1,6 @@
 import { NewPetSchema, PetSchema, UserSchema } from 'src/__tests__/schemas'
 import { object } from 'valibot'
-import { contract, router } from './builder'
+import { collect, contract } from './builder'
 
 const findPetContract = contract({
   method: 'GET',
@@ -56,7 +56,7 @@ const deletePetContract = contract({
   },
 })
 
-export const petRouter = router({
+export const petContractCollection = collect({
   find: findPetContract,
   create: createPetContract,
   update: updatePetContract,

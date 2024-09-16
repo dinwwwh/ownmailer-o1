@@ -38,7 +38,7 @@ export interface Contract<
   responses?: TResponses
 }
 
-export type ContractsRouter<T extends Record<string, Contract | ContractsRouter> = any> = T
+export type ContractCollection<T extends Record<string, Contract | ContractCollection> = any> = T
 
 export interface ContractResponse<
   TBodySchema extends AllowedSchema = AllowedSchema,
