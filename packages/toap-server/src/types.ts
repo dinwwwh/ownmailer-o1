@@ -50,7 +50,7 @@ export type ContractResolverOutput<
     ? HeadersSchema
     : never
 > = IsEqual<TResponses, ContractResponses> extends true
-  ? void
+  ? unknown
   : {
       status: keyof TResponses
     } & (TBodySchema extends AllowedSchema

@@ -97,6 +97,9 @@ importers:
       '@toap/contract':
         specifier: workspace:*
         version: link:../toap-contract
+      trek-router:
+        specifier: ^1.2.0
+        version: 1.2.0
       valibot:
         specifier: ^0.41.0
         version: 0.41.0(typescript@5.6.2)
@@ -821,6 +824,10 @@ packages:
   to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
+
+  trek-router@1.2.0:
+    resolution: {integrity: sha512-43A1krE0myUO2DV+RQBUYLwK3Q5osszQ65jFe/TFGWMnhdZx0nvq2GQXecXwIPU0weSFo1pYmHfhHHaUPPIRNg==}
+    engines: {node: '>= 6'}
 
   ts-deepmerge@6.2.1:
     resolution: {integrity: sha512-8CYSLazCyj0DJDpPIxOFzJG46r93uh6EynYjuey+bxcLltBeqZL7DMfaE5ZPzZNFlav7wx+2TDa/mBl8gkTYzw==}
@@ -1566,6 +1573,8 @@ snapshots:
   tinyspy@3.0.2: {}
 
   to-fast-properties@2.0.0: {}
+
+  trek-router@1.2.0: {}
 
   ts-deepmerge@6.2.1: {}
 
