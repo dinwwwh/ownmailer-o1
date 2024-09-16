@@ -1,69 +1,24 @@
 import { expect, it } from 'vitest'
-import { userContractCollection } from './__tests__/contract'
 import { fakeUser } from './__tests__/fakes'
-import { ServerBuilder } from './builder'
-import { router } from './router'
+import { appRouter, context } from './__tests__/router'
 
-interface Context {
-  auth?: {
-    id: string
-    token: string
-  }
-
-  db: 'mysql' | 'postgres'
-}
-
-const context: Context = {
-  db: 'mysql',
-  auth: {
-    id: 'd55a0096-abd9-4183-ab8f-eb2a988abf12',
-    token: '******',
-  },
-}
-
-const builder = new ServerBuilder<Context>()
-
-const appRouter = router(
-  userContractCollection,
-  builder.fulfill(userContractCollection).collect({
-    create: async ({ body }) => {
-      return {
-        status: 201 as const,
-        body: {
-          ...fakeUser,
-          ...body,
-        },
-      }
-    },
-
-    find: builder.fulfill(userContractCollection.find).resolver(({ params }) => {
-      return {
-        status: 200,
-        body: {
-          ...fakeUser,
-          id: params.id,
-        },
-      }
-    }),
-
-    delete: builder.fulfill(userContractCollection.delete).resolver(() => {
-      return {
-        status: 204,
-      }
-    }),
-
-    update: builder.fulfill(userContractCollection.update).resolver(({ params, body }) => {
-      return {
-        status: 200,
-        body: {
-          ...fakeUser,
-          ...body,
-          id: params.id,
-        },
-      }
-    }),
+it('can handle not found', { repeats: 5 }, async () => {
+  const result = await appRouter({
+    path: '/not-found',
+    method: 'GET',
+    context,
+    body: undefined,
+    headers: undefined,
+    query: undefined,
   })
-)
+
+  expect(result).toMatchObject({
+    status: 404,
+    body: {
+      message: 'Not found',
+    },
+  })
+})
 
 it('can find a user', { repeats: 5 }, async () => {
   const id = crypto.randomUUID()
@@ -71,7 +26,7 @@ it('can find a user', { repeats: 5 }, async () => {
   const result = await appRouter({
     path: '/users/' + id,
     method: 'GET',
-    context,
+    context: context,
     body: undefined,
     headers: undefined,
     query: undefined,
@@ -88,7 +43,7 @@ it('can find a user', { repeats: 5 }, async () => {
 
 it('can create a user', { repeats: 5 }, async () => {
   const name = crypto.randomUUID()
-  const age = Math.floor(Math.random() * 100)
+  const age = Math.floor(Math.random() * 100) + 18
   const disabled = Math.random() > 0.5
 
   const result = await appRouter({

@@ -1,17 +1,25 @@
-import { AllowedMethod, Contract, ContractCollection, isContract } from '@toap/contract'
-import Router from 'trek-router'
+import { Contract, ContractCollection, isContract } from '@toap/contract'
+import Router_ from 'trek-router'
 import { isValiError, parseAsync } from 'valibot'
 import { ContractResolver, ContractResolverCollection, ContractResolverInput } from './types'
 import { convertOpenapiPathToTrekRouterPath } from './utils/router'
 
-export type RouterInput<TCollection extends ContractResolverCollection> = Omit<
+export interface Router<
+  TResolverCollection extends ContractResolverCollection = ContractResolverCollection
+> {
+  (input: RouterInput<TResolverCollection>): Promise<RouterOutput>
+}
+
+export type RouterInput<
+  TCollection extends ContractResolverCollection = ContractResolverCollection
+> = Omit<
   TCollection extends ContractResolverCollection<infer Context>
     ? ContractResolverInput<Context>
     : ContractResolverInput,
   'params'
-> & { method: AllowedMethod; path: string }
+> & { method: string; path: string }
 
-export type RouterOutput = {
+export interface RouterOutput {
   status: number
   body?: unknown
   headers?: unknown
@@ -27,8 +35,8 @@ export function router<
     ? ContractCollection
     : never,
   resolverCollection: TResolverCollection
-): (input: RouterInput<TResolverCollection>) => Promise<RouterOutput> {
-  const router = new Router<[Contract, ContractResolver]>()
+): Router<TResolverCollection> {
+  const router = new Router_<[Contract, ContractResolver]>()
 
   // TODO: add all resolvers into the router
   const addToRouterRecursively = (
@@ -57,16 +65,16 @@ export function router<
 
   addToRouterRecursively(contractCollection, resolverCollection)
 
-  return async (input: RouterInput<TResolverCollection>): Promise<RouterOutput> => {
+  return async (input) => {
     try {
       const [match, paramsArr] = router.find(input.method, input.path)
 
-      // TODO: handle separate case 405: Method is not allowed and make 501 only: path is not implemented
+      // TODO: handle separate case 405: Method is not allowed and 501 only: path is not implemented
       if (!match) {
         return {
-          status: 501,
+          status: 404,
           body: {
-            message: 'Method is not allowed or path is not implemented',
+            message: 'Not found',
           },
         }
       }

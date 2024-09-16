@@ -19,6 +19,7 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     dts({
+      tsconfigPath: path.resolve(__dirname, './tsconfig.app.json'),
       compilerOptions: {
         paths: {
           /**

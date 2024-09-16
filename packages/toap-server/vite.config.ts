@@ -12,13 +12,17 @@ export default defineConfig({
     ssr: true, // Prevent bundle all dependencies (except linked dependencies, and above noExternal list) and make it usable in node.js
     target: 'es2022',
     lib: {
-      entry: [path.resolve(__dirname, './src/index.ts')],
+      entry: [
+        path.resolve(__dirname, './src/index.ts'),
+        path.resolve(__dirname, './src/adapters/fetch.ts'),
+      ],
       formats: ['es'],
     },
   },
   plugins: [
     tsconfigPaths(),
     dts({
+      tsconfigPath: path.resolve(__dirname, './tsconfig.app.json'),
       compilerOptions: {
         paths: {
           /**
