@@ -6,7 +6,7 @@
   },
   "references": [
     { "path": "./tsconfig.app.json" },
-    { "path": "../tsoapi-contract/tsconfig.app.json" }
+    { "path": "../toap-contract/tsconfig.app.json" }
   ],
   "include": [
     "src/**/*.test.*",

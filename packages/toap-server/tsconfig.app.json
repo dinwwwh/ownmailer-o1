@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "types": ["vite/client"]
   },
-  "references": [{ "path": "../tsoapi-contract/tsconfig.app.json" }],
+  "references": [{ "path": "../toap-contract/tsconfig.app.json" }],
   "include": ["src"],
   "exclude": [
     "**/*.test.*",

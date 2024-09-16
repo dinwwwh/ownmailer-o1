@@ -1,4 +1,4 @@
-import { Contract, ContractsRouter, isContract } from '@tsoapi/contract'
+import { Contract, ContractsRouter, isContract } from '@toap/contract'
 import { Context, ContractHandler, ContractHandlersRouter } from './types'
 
 export class ServerBuilder<TContext extends Context = Context> {

@@ -1,4 +1,4 @@
-import { contract, router } from '@tsoapi/contract'
+import { contract, router } from '@toap/contract'
 import { object, string } from 'valibot'
 import { NewPetSchema, NewUserSchema, PetSchema, UserSchema } from './schemas'
 

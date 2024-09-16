@@ -64,7 +64,7 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(typescript@5.6.2)(vite@5.4.5(@types/node@22.5.5))
 
-  packages/tsoapi-contract:
+  packages/toap-contract:
     dependencies:
       valibot:
         specifier: ^0.41.0
@@ -92,11 +92,11 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1(@types/node@22.5.5)
 
-  packages/tsoapi-server:
+  packages/toap-server:
     dependencies:
-      '@tsoapi/contract':
+      '@toap/contract':
         specifier: workspace:*
-        version: link:../tsoapi-contract
+        version: link:../toap-contract
       valibot:
         specifier: ^0.41.0
         version: 0.41.0(typescript@5.6.2)

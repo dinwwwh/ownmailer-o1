@@ -1,4 +1,4 @@
-import { contract } from '@tsoapi/contract'
+import { contract } from '@toap/contract'
 import { InferOutput, object, string } from 'valibot'
 import { expectTypeOf, it } from 'vitest'
 import { appRouter, userRouter } from './__tests__/contract'

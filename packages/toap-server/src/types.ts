@@ -4,7 +4,7 @@ import type {
   ContractResponse,
   ContractResponses,
   ContractsRouter,
-} from '@tsoapi/contract'
+} from '@toap/contract'
 import { InferInput } from 'valibot'
 import { IsEqual, Promisable } from './utils/types'
 

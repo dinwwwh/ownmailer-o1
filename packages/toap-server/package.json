@@ -1,5 +1,5 @@
 {
-  "name": "@tsoapi/server",
+  "name": "@toap/server",
   "type": "module",
   "version": "0.0.0",
   "author": {
@@ -44,7 +44,7 @@
     "type:check": "tsc -b"
   },
   "dependencies": {
-    "@tsoapi/contract": "workspace:*",
+    "@toap/contract": "workspace:*",
     "valibot": "^0.41.0"
   },
   "devDependencies": {
