@@ -1,9 +1,7 @@
 import { Contract } from './types'
 
 // TODO: add more checks
-export function isContract<T extends unknown | Contract>(
-  contract: T
-): contract is Exclude<T, unknown> {
+export function isContract(contract: unknown): contract is Contract {
   if (typeof contract !== 'object' || contract === null) return false
 
   if (!('path' in contract) || typeof contract.path !== 'string') return false

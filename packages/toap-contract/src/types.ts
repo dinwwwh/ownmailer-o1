@@ -1,23 +1,9 @@
-import {
-  BaseIssue,
-  BaseMetadata,
-  BaseSchema,
-  BaseSchemaAsync,
-  BaseTransformation,
-  BaseTransformationAsync,
-  BaseValidation,
-  BaseValidationAsync,
-} from 'valibot'
+import { BaseIssue, BaseSchema, BaseSchemaAsync } from 'valibot'
 
 export type AllowedMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 export type AllowedSchema =
   | BaseSchema<unknown, unknown, BaseIssue<unknown>>
   | BaseSchemaAsync<unknown, unknown, BaseIssue<unknown>>
-  | BaseValidation<any, unknown, BaseIssue<unknown>>
-  | BaseValidationAsync<any, unknown, BaseIssue<unknown>>
-  | BaseTransformation<any, unknown, BaseIssue<unknown>>
-  | BaseTransformationAsync<any, unknown, BaseIssue<unknown>>
-  | BaseMetadata<any>
 
 export interface Contract<
   TResponses extends ContractResponses = ContractResponses,

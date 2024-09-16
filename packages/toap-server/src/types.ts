@@ -8,9 +8,8 @@ import type {
 import { InferInput } from 'valibot'
 import { IsEqual, Promisable } from './utils/types'
 
-export type AllowedContext = {
-  [key: string | number | symbol]: unknown
-}
+// TODO: it should me Record<string | number | symbol, unknown>
+export type AllowedContext = any
 
 export interface ContractResolver<
   TContext extends AllowedContext = AllowedContext,
@@ -54,15 +53,15 @@ export type ContractResolverOutput<
   : {
       status: keyof TResponses
     } & (TBodySchema extends AllowedSchema
-      ? InferInput<TBodySchema> extends never
-        ? { body?: never }
+      ? IsEqual<InferInput<TBodySchema>, unknown> extends true
+        ? { body?: unknown }
         : { body: InferInput<TBodySchema> }
-      : { body?: never }) &
+      : { body?: unknown }) &
       (THeadersSchema extends AllowedSchema
-        ? InferInput<THeadersSchema> extends never
-          ? { headers?: never }
+        ? IsEqual<InferInput<THeadersSchema>, unknown> extends true
+          ? { headers?: unknown }
           : { headers: InferInput<THeadersSchema> }
-        : { headers?: never })
+        : { headers?: unknown })
 
 export type ContractResolverCollection<
   TContext extends AllowedContext = AllowedContext,
