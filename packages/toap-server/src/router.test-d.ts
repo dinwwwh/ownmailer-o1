@@ -1,4 +1,3 @@
-import { AllowedMethod } from '@toap/contract'
 import { expectTypeOf, it } from 'vitest'
 import { petContractCollection, userContractCollection } from './__tests__/contract'
 import { ServerBuilder } from './builder'
@@ -31,7 +30,7 @@ it('require correct input', () => {
   expectTypeOf<Parameters<typeof appRouter>>().toMatchTypeOf<
     [
       {
-        method: AllowedMethod
+        method: string
         path: string
         context: Context
         query: unknown
